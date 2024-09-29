@@ -1,0 +1,13 @@
+if form.validate_on_submit():
+        folder = request.files["folder"]
+        folder_path = os.path.join(
+            app.config["DATASET_UPLOADS_FOLDER"], secure_filename(folder.filename)
+        )
+        folder.save(folder_path)
+
+        # Unzip the uploaded folder
+        with zipfile.ZipFile(folder_path, "r") as zip_ref:
+            zip_ref.extractall(app.config["DATASET_UPLOADS_FOLDER"])
+
+        # Remove the uploaded zip file
+        os.remove(folder_path)
